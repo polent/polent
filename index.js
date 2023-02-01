@@ -11,13 +11,14 @@ const cText = (text, color) => {
     }
     return color + text + RESET;
 }
-console.log(getColoredText("Hello!", GREEN));
-console.log(getColoredText("I'm Polent, some call me Holger!", YELLOW));
-console.log(getColoredText(`
+console.log(cText("Hello!", GREEN));
+console.log(cText("I'm Polent, some call me Holger!", YELLOW));
+console.log(cText(`
+
 🧾 Blog: https://polente.de
 🌤 WTF: https://hellinger.wtf
 🥇 Me : https://hellinger.wtf
 🎸 GitHub: https://github.com/polent
 
-
 `, WHITE));
+console.log(cText("Have a great life!", GREEN));
