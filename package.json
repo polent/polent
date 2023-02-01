@@ -1,16 +1,19 @@
 {
   "name": "polent",
-  "version": "1.0.o",
-  "description": "",
+  "version": "1.0.0",
+  "description": "It's me Polent",
   "main": "index.js",
-  "bin": {
-    "gurpreet": "index.js"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/polent/polent.git"
   },
-  "author": "",
+  "keywords": [
+    "polent"
+  ],
+  "author": "Holger Hellinger",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/polent/polent/issues"
