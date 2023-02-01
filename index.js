@@ -18,4 +18,6 @@ console.log(getColoredText(`
 🌤 WTF: https://hellinger.wtf
 🥇 Me : https://hellinger.wtf
 🎸 GitHub: https://github.com/polent
+
+
 `, WHITE));
