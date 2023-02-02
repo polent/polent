@@ -18,7 +18,7 @@ console.log(cText(`
 
   Blog: https://polente.de
   WTF: https://hellinger.wtf
-  Me : https://hellinger.wtf
+  Me : https://www.holger-hellinger.de
   GitHub: https://github.com/polent
 
 `, WHITE));
