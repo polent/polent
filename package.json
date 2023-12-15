@@ -1,6 +1,6 @@
 {
   "name": "polent",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "It's me Polent",
   "main": "index.js",
   "scripts": {
