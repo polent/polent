@@ -1,9 +1,12 @@
-# Publishes the package to npm when a GitHub release is published.
-# Also supports manual runs via workflow_dispatch.
+# Publishes the package to npm.
+# Runs on every push to main, but only publishes when package.json has a
+# version that isn't already on npm. Also runs on release + manual dispatch.
 
 name: Node.js Package
 
 on:
+  push:
+    branches: [main]
   release:
     types: [published]
   workflow_dispatch:
@@ -18,6 +21,16 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish
+      # Publish only if this version isn't already on the registry, so
+      # pushes without a version bump don't fail the job.
+      - name: Publish if version is new
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "$NAME@$VERSION is already published — skipping."
+          else
+            npm publish
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
