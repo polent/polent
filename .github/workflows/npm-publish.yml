@@ -35,15 +35,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # Bump patch version + package-lock, create the "vX.Y.Z" commit and tag.
-      # [skip ci] on the commit prevents this push from re-triggering the run.
+      # Bump patch version + package-lock, create the "vX.Y.Z" commit and tag
+      # locally (not pushed yet). [skip ci] keeps the eventual push from
+      # re-triggering this workflow.
       - name: Bump patch version
         run: 'npm version patch -m "chore: release v%s [skip ci]"'
 
-      - name: Push version bump and tag
-        run: git push --follow-tags
-
+      # Publish first. If this fails, the job stops here and the bump commit/tag
+      # are never pushed, so the repo stays in sync with what's on npm.
       - name: Publish to npm
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Only reached when publish succeeded.
+      - name: Push version bump and tag
+        run: git push --follow-tags
