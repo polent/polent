@@ -1,15 +1,23 @@
 # Publishes the package to npm.
-# Runs on every push to main, but only publishes when package.json has a
-# version that isn't already on npm. Also runs on release + manual dispatch.
+# On every push to main it auto-bumps the patch version, commits + tags the
+# bump back to the repo, and publishes to npm. The bump commit is marked
+# [skip ci] so it doesn't trigger this workflow again.
 
 name: Node.js Package
 
 on:
   push:
     branches: [main]
-  release:
-    types: [published]
   workflow_dispatch:
+
+# Allow the job to push the version-bump commit and tag back to the repo.
+permissions:
+  contents: write
+
+# Never run two publishes at once (avoids racing version bumps).
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
 
 jobs:
   publish-npm:
@@ -21,16 +29,21 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      # Publish only if this version isn't already on the registry, so
-      # pushes without a version bump don't fail the job.
-      - name: Publish if version is new
+
+      - name: Configure git identity
         run: |
-          NAME=$(node -p "require('./package.json').name")
-          VERSION=$(node -p "require('./package.json').version")
-          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
-            echo "$NAME@$VERSION is already published — skipping."
-          else
-            npm publish
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # Bump patch version + package-lock, create the "vX.Y.Z" commit and tag.
+      # [skip ci] on the commit prevents this push from re-triggering the run.
+      - name: Bump patch version
+        run: 'npm version patch -m "chore: release v%s [skip ci]"'
+
+      - name: Push version bump and tag
+        run: git push --follow-tags
+
+      - name: Publish to npm
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

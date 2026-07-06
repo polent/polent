@@ -23,6 +23,7 @@ console.log(
   WTF: https://hellinger.wtf
   Me : https://www.holger-hellinger.de
   GitHub: https://github.com/polent
+  Absurd: https://absurde.forderungen.polente.de/ 
 
 `,
     WHITE
